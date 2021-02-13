@@ -9,25 +9,25 @@ import 'package:vxstate/vxstate.dart';
 import 'mystore.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(VxState(
+    store: MyStore(),
+    interceptors: [LogInterceptor()],
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return VxState(
-      store: MyStore(),
-      interceptors: [LogInterceptor()],
-      child: MaterialApp(
-        title: 'Codepur State Management',
-        theme: appTheme,
-        initialRoute: '/',
-        routes: {
-          '/': (context) => MyLogin(),
-          '/catalog': (context) => MyCatalog(),
-          '/cart': (context) => MyCart(),
-        },
-      ),
+    return MaterialApp(
+      title: 'Codepur State Management',
+      theme: appTheme,
+      initialRoute: '/',
+      routes: {
+        '/': (context) => MyLogin(),
+        '/catalog': (context) => MyCatalog(),
+        '/cart': (context) => MyCart(),
+      },
     );
   }
 }
