@@ -1,0 +1,30 @@
+name: catalog_app
+description: A shopping app sample that uses Provider for state management.
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  pedantic: ^1.9.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/
+
+  fonts:
+    - family: Corben
+      fonts:
+        - asset: fonts/Corben/Corben-Bold.ttf
+          weight: 700
