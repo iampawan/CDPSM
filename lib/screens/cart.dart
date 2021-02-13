@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:catalog_app/models/cart.dart';
+import 'package:provider/provider.dart';
 
 class MyCart extends StatelessWidget {
   @override
@@ -28,18 +29,13 @@ class MyCart extends StatelessWidget {
   }
 }
 
-class _CartList extends StatefulWidget {
-  @override
-  __CartListState createState() => __CartListState();
-}
-
-class __CartListState extends State<_CartList> {
+class _CartList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var itemNameStyle =
         Theme.of(context).textTheme.headline6.copyWith(color: Colors.white);
-    //TODO 4 - Get Cart
-    var cart = CartModel();
+
+    var cart = context.watch<CartModel>();
 
     return ListView.builder(
       itemCount: cart.items.length,
@@ -55,7 +51,6 @@ class __CartListState extends State<_CartList> {
           ),
           onPressed: () {
             cart.remove(cart.items[index]);
-            setState(() {});
           },
         ),
         title: Text(
@@ -74,15 +69,17 @@ class _CartTotal extends StatelessWidget {
         .textTheme
         .headline1
         .copyWith(fontSize: 48, color: Colors.white);
-
     return SizedBox(
       height: 200,
       child: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // TODO 5 - Consume Cart
-            Text('\$${CartModel().totalPrice}', style: hugeStyle),
+            Consumer<CartModel>(
+              builder: (context, cart, child) {
+                return Text('\$${cart.totalPrice}', style: hugeStyle);
+              },
+            ),
             SizedBox(width: 24),
             TextButton(
               onPressed: () {

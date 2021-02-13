@@ -1,14 +1,7 @@
 import 'package:catalog_app/models/catalog.dart';
+import 'package:flutter/material.dart';
 
-class CartModel {
-  //TODO 6 - Notify updates
-
-  static final cartModel = CartModel._internal();
-
-  CartModel._internal();
-
-  factory CartModel() => cartModel;
-
+class CartModel extends ChangeNotifier {
   /// The private field backing [catalog].
   CatalogModel _catalog;
 
@@ -35,9 +28,11 @@ class CartModel {
   /// Adds [item] to cart. This is the only way to modify the cart from outside.
   void add(Item item) {
     _itemIds.add(item.id);
+    notifyListeners();
   }
 
   void remove(Item item) {
     _itemIds.remove(item.id);
+    notifyListeners();
   }
 }
