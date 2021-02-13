@@ -5,6 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:catalog_app/models/cart.dart';
 import 'package:catalog_app/models/catalog.dart';
 import 'package:catalog_app/widgets/appbar.dart';
+import 'package:vxstate/vxstate.dart';
+
+import '../mystore.dart';
 
 class MyCatalog extends StatefulWidget {
   @override
@@ -46,32 +49,17 @@ class _MyCatalogState extends State<MyCatalog> {
   }
 }
 
-class _AddButton extends StatefulWidget {
+class _AddButton extends StatelessWidget {
   final Item item;
 
   const _AddButton({Key key, @required this.item}) : super(key: key);
-
-  @override
-  __AddButtonState createState() => __AddButtonState();
-}
-
-class __AddButtonState extends State<_AddButton> {
   @override
   Widget build(BuildContext context) {
-    //TODO 2 - Find inCart or not
-
-    final isInCart = CartModel().items.contains(widget.item);
-
+    VxState.listen(context, to: [AddMutation, RemoveMutation]);
+    final MyStore store = VxState.store;
+    final isInCart = store.cart.items.contains(item);
     return TextButton(
-      onPressed: isInCart
-          ? null
-          : () {
-              //TODO 3 - Get Cart
-              var cart = CartModel();
-              cart.catalog = CatalogModel();
-              cart.add(widget.item);
-              setState(() {});
-            },
+      onPressed: isInCart ? null : () => AddMutation(item),
       style: ButtonStyle(
         overlayColor: MaterialStateProperty.resolveWith<Color>((states) {
           if (states.contains(MaterialState.pressed)) {

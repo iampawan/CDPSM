@@ -1,14 +1,9 @@
 import 'package:catalog_app/models/catalog.dart';
+import 'package:vxstate/vxstate.dart';
+
+import '../mystore.dart';
 
 class CartModel {
-  //TODO 6 - Notify updates
-
-  static final cartModel = CartModel._internal();
-
-  CartModel._internal();
-
-  factory CartModel() => cartModel;
-
   /// The private field backing [catalog].
   CatalogModel _catalog;
 
@@ -31,13 +26,24 @@ class CartModel {
   /// The current total price of all items.
   num get totalPrice =>
       items.fold(0, (total, current) => total + current.price);
+}
 
-  /// Adds [item] to cart. This is the only way to modify the cart from outside.
-  void add(Item item) {
-    _itemIds.add(item.id);
+class AddMutation extends VxMutation<MyStore> {
+  final Item item;
+
+  AddMutation(this.item);
+  @override
+  perform() {
+    store.cart._itemIds.add(item.id);
   }
+}
 
-  void remove(Item item) {
-    _itemIds.remove(item.id);
+class RemoveMutation extends VxMutation<MyStore> {
+  final Item item;
+
+  RemoveMutation(this.item);
+  @override
+  perform() {
+    store.cart._itemIds.remove(item.id);
   }
 }

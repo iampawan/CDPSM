@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:catalog_app/models/cart.dart';
+import 'package:vxstate/vxstate.dart';
+
+import '../mystore.dart';
 
 class MyCart extends StatelessWidget {
   @override
@@ -28,18 +31,13 @@ class MyCart extends StatelessWidget {
   }
 }
 
-class _CartList extends StatefulWidget {
-  @override
-  __CartListState createState() => __CartListState();
-}
-
-class __CartListState extends State<_CartList> {
+class _CartList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    VxState.listen(context, to: [RemoveMutation]);
     var itemNameStyle =
         Theme.of(context).textTheme.headline6.copyWith(color: Colors.white);
-    //TODO 4 - Get Cart
-    var cart = CartModel();
+    final CartModel cart = (VxState.store as MyStore).cart;
 
     return ListView.builder(
       itemCount: cart.items.length,
@@ -53,10 +51,7 @@ class __CartListState extends State<_CartList> {
             Icons.remove_circle_outline,
             color: Colors.white,
           ),
-          onPressed: () {
-            cart.remove(cart.items[index]);
-            setState(() {});
-          },
+          onPressed: () => RemoveMutation(cart.items[index]),
         ),
         title: Text(
           cart.items[index].name,
@@ -70,6 +65,7 @@ class __CartListState extends State<_CartList> {
 class _CartTotal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final CartModel cart = (VxState.store as MyStore).cart;
     var hugeStyle = Theme.of(context)
         .textTheme
         .headline1
@@ -81,8 +77,11 @@ class _CartTotal extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // TODO 5 - Consume Cart
-            Text('\$${CartModel().totalPrice}', style: hugeStyle),
+            VxBuilder(
+                builder: (ctx, _) {
+                  return Text('\$${cart.totalPrice}', style: hugeStyle);
+                },
+                mutations: {RemoveMutation}),
             SizedBox(width: 24),
             TextButton(
               onPressed: () {
